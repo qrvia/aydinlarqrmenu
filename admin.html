@@ -20,7 +20,7 @@ function el(tag,attrs={},text){const x=document.createElement(tag);for(const [k,
 function btn(text,cls='',fn){const b=el('button',{class:cls},text);b.type='button';b.addEventListener('click',fn);return b}
 async function load(){
  const {data:session}=await db.auth.getSession();if(!session.session){$('login').classList.remove('hidden');$('dashboard').classList.add('hidden');$('logout').classList.add('hidden');return}
- const {data:r,error:e}=await db.from('restaurants').select('id,name').eq('slug',slug).single();if(e||!r){$('dashboard').classList.add('hidden');$('login').classList.add('hidden');$('logout').classList.remove('hidden');return note('Bu hesap AYDINLAR için yetkili değil.',true)}
+ const {data:r,error:e}=await db.from('restaurants').select('id,name').eq('slug',slug).single();if(e||!r){$('dashboard').classList.add('hidden');$('login').classList.add('hidden');$('logout').classList.remove('hidden');const details=e?('Supabase hatası: '+e.message+' (kod: '+(e.code||'yok')+')'):'AYDINLAR kaydı bu kullanıcı için görünmüyor (RLS veya yetki).';return note(details,true)}
  restaurantId=r.id;$('login').classList.add('hidden');$('dashboard').classList.remove('hidden');$('logout').classList.remove('hidden');await refresh();
 }
 async function refresh(){
